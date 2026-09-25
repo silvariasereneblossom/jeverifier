@@ -178,7 +178,7 @@ def _apply(repo: Path, secs, base: Result, plan, max_cost: float | None):
     """Copy the docs to a scratch folder, plant there, and run the pipeline on the copy."""
     from ..wiki import _wiki_and_docs
 
-    with tempfile.TemporaryDirectory(prefix="jevauto-selftest-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="jeverifier-selftest-") as tmp:
         root = Path(tmp)
         for f in {s.file for s in secs}:
             (root / f).parent.mkdir(parents=True, exist_ok=True)

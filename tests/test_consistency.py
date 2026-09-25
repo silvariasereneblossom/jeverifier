@@ -9,8 +9,8 @@ import httpx2
 import pytest
 from typesafe_sdk import AsyncTypeSafeClient
 
-from jevauto import consistency as cs
-from jevauto import ctx, wiki
+from jeverifier import consistency as cs
+from jeverifier import ctx, wiki
 
 
 def make_repo(tmp_path):

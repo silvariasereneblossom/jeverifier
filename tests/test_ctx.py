@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from jevauto import ctx
+from jeverifier import ctx
 
 
 def test_sections_follow_headings_and_ignore_code_fences(tmp_path):
@@ -40,3 +40,17 @@ def test_transcript_turns_skip_tool_output_and_reminders(tmp_path):
     turns = ctx.turns_of(t)
     assert [x.who for x in turns] == ["user", "claude"]
     assert ctx.turns_of(t, since="2026-09-20T10:00:02") [0].who == "claude"
+
+
+def test_secrets_are_redacted_before_jev_sees_them():
+    text = ("key sk-ant-api03-abcdefghijklmnopqrstuvwx, token: ghp_abcdefghijklmnopqrstuvwxyz0123, "
+            "my github_pat_11ABCDEFG0qVZSmr here and 0123456789abcdef0123456789abcdef")
+    out = ctx.redact(text)
+    for leaked in ("sk-ant-api03", "ghp_abc", "github_pat_11", "0123456789abcdef0123"):
+        assert leaked not in out
+    assert ctx.redact("Search products") == "Search products"
+
+
+def test_urls_and_paths_survive_redaction():
+    url = "file:///C:/Users/someone/projects/jeverifier/docs/page.html"
+    assert ctx.redact(url) == url

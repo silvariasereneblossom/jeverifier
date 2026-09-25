@@ -10,7 +10,7 @@ standing preferences, open items and status changes, plus a short summary writte
 
 ## Procedure
 
-1. **Generate the digest:** `jevauto wiki log <repo> <session-id|latest> --since <last log date>`.
+1. **Generate the digest:** `jeverifier wiki log <repo> <session-id|latest> --since <last log date>`.
    It writes `sessions/logs/YYYY-MM-DD-<slug>.md` and adds a row to `sessions/index.md`.
    Open items the current handover already resolves are set aside automatically.
 2. **Write the summary** at the top of the new log (3–6 bullets): what changed, what was decided,
@@ -20,5 +20,5 @@ standing preferences, open items and status changes, plus a short summary writte
 
 ## At the start of a session
 
-Read `sessions/index.md` and the newest one or two logs, then ask `jevauto ctx find <repo> "<task>"`
+Read `sessions/index.md` and the newest one or two logs, then ask `jeverifier ctx find <repo> "<task>"`
 (or the `context_find` MCP tool) for the doc sections the task needs.

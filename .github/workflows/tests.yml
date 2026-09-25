@@ -1,4 +1,4 @@
-# The offline test suite on Linux and Windows (desktop tests skip themselves off Windows).
+# The offline test suite on Linux and Windows.
 name: tests
 
 on:
@@ -23,5 +23,4 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pip install -e ".[dev]"
-      - run: python -m playwright install --with-deps chromium
       - run: python -m pytest -q

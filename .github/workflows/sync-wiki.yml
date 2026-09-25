@@ -1,4 +1,4 @@
-# Mirrors wiki/ to this repo's GitHub Wiki. wiki/ is written by `jevauto wiki publish` from the private repo,
+# Mirrors wiki/ to this repo's GitHub Wiki. wiki/ is written by `jeverifier wiki publish` from the private repo,
 # so every page here has already passed its allowlist, internal-marker and deny checks.
 # Pushes with the Action's own token; a WIKI_PUSH_TOKEN secret (fine-grained PAT, Contents read/write) overrides it.
 # The wiki must exist first: create its first page once in the web UI.
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   sync:
-    if: github.repository == 'silvariasereneblossom/jevauto' && !contains(github.event.head_commit.message, '[skip wiki]')
+    if: github.repository == 'silvariasereneblossom/jeverifier' && !contains(github.event.head_commit.message, '[skip wiki]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

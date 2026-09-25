@@ -12,7 +12,7 @@ import re
 
 from .. import jev
 from .. import ctx
-from ..model import redact
+from ..ctx import redact
 
 
 CONCURRENCY = 4  # TypeSafe allows 250k tokens/s; tagging requests are large

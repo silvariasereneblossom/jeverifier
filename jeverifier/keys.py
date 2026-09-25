@@ -2,8 +2,8 @@
 Linux Secret Service (GNOME Keyring, KWallet). Without a vault, keys come from environment variables.
 
 Keys never touch disk in plaintext or shell history. At startup `load_into_env()` copies
-any stored key into os.environ for this process only, so the TypeSafe and Anthropic SDKs
-pick them up with their normal env-var lookup.
+any stored key into os.environ for this process only, so the TypeSafe SDK
+picks them up with its normal env-var lookup.
 
 Any env-var-style name can be stored. Names (not values) of custom keys are kept in an index
 entry in the same vault so they can be listed; Credential Manager itself can't enumerate them.
@@ -19,8 +19,8 @@ import re
 import keyring
 from keyring.errors import KeyringError, PasswordDeleteError
 
-SERVICE = "jevauto"
-KNOWN_KEYS = ("TYPESAFE_API_KEY", "OPENJEV_API_KEY", "ANTHROPIC_API_KEY")
+SERVICE = "jeverifier"
+KNOWN_KEYS = ("TYPESAFE_API_KEY", "OPENJEV_API_KEY")
 _INDEX = "__names__"
 _NAME = re.compile(r"^[A-Z_][A-Z0-9_]{0,63}$")
 

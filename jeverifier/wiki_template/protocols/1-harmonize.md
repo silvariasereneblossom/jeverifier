@@ -24,6 +24,6 @@ Perform a full wiki harmonization pass across a specified topic area.
    - **Orphaned pages** — `.md` files under `docs/wiki/` that no other wiki page links to. Every page should be reachable from `home.md` through at most two hops.
    - **Broken internal links** — relative links that point to a file that does not exist
    - **Missing Related Pages links** — pages that reference a topic but don't link to the dedicated page for that topic in their Related Pages section
-   - **How to check:** run `jevauto wiki coverage <repo>`, which crawls every relative link from `home.md` and lists orphans and broken links.
+   - **How to check:** run `jeverifier wiki coverage <repo>`, which crawls every relative link from `home.md` and lists orphans and broken links.
 8. **Verify** — Run Protocol 3 to generate commands that check ground truth on live systems. Present the commands to the user and wait for confirmation before applying fixes.
 9. Make all fixes, commit (as the repository owner, no attribution trailer); push only when the owner asks

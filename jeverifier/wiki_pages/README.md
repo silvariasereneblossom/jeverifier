@@ -8,9 +8,9 @@ and consistency checks. Maintenance follows the protocols in `protocols/`.
 
 - `home.md` — front door; every page must be reachable from here (Protocol 6)
 - `overview.md` — what the project is and how it fits together, in one page
-- `map.md` — generated section map of the project's own docs (`jevauto wiki map`)
+- `map.md` — generated section map of the project's own docs (`jeverifier wiki map`)
 - `sessions/` — `index.md` plus one Jev-triaged log per session (Protocol 5)
-- `checks/` — review verdicts, the accepted baseline (`wiki check`/`accept`), and `lint.json`: semantic code rules Jev checks per function (`jevauto wiki lint`)
+- `checks/` — review verdicts, the accepted baseline (`wiki check`/`accept`), and `lint.json`: semantic code rules Jev checks per function (`jeverifier wiki lint`)
 - `meta/` — style guide and how the AI-maintained wiki works
 - `protocols/` — maintenance workflows, invoked as "run Protocol N"
 

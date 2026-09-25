@@ -9,9 +9,9 @@ reviews the short list and decides; every decision is recorded so the next run i
 
 ## Procedure
 
-1. **Rank:** `jevauto wiki check <repo>`. It extracts claims (sentences with a number or a rule
+1. **Rank:** `jeverifier wiki check <repo>`. It extracts claims (sentences with a number or a rule
    word) and keeps only sections describing the project *as it is now* (history and plans are
-   expected to differ). It writes two lists to `jev-automation/out/<repo>/consistency-<date>.md`:
+   expected to differ). It writes two lists to `out/<repo>/consistency-<date>.md` in the jeverifier checkout:
    - **Number mismatches:** code finds statements counting the same thing with different numbers;
      Jev judges whether they count the same specific thing.
    - **Other possible contradictions:** pairs grouped by topic or close wording, ranked by Jev's
@@ -24,7 +24,7 @@ reviews the short list and decides; every decision is recorded so the next run i
    last `accept`, above a score floor — typically 3–4 pairs per edited statement. `--deep` shows the
    full ranking again when you want to dig further.
 2. **Review each pair** and record a verdict:
-   `jevauto wiki verdict <repo> <id> contradiction|stale|false-alarm --note "why"`
+   `jeverifier wiki verdict <repo> <id> contradiction|stale|false-alarm --note "why"`
    - **contradiction:** both describe the current state and disagree — fix it (steps 4–5).
    - **stale:** one side is out of date — fix that side.
    - **false-alarm:** different things, or not actually in conflict. The pair is hidden from future
@@ -34,7 +34,7 @@ reviews the short list and decides; every decision is recorded so the next run i
    right after it) or statements without a number or rule word.
 4. **Verify** anything not obvious with Protocol 3; the code and the check scripts are the truth.
 5. **Fix**, re-run `check` (the fixes are new text, so their pairs appear in the delta), review those.
-6. **Accept:** `jevauto wiki accept <repo>` records the reviewed text as the baseline
+6. **Accept:** `jeverifier wiki accept <repo>` records the reviewed text as the baseline
    (`docs/wiki/checks/baseline.json`, versioned). The next `check` should list 0 pairs until the docs
    change. Use `--git-ref HEAD` to accept the committed text when the review covered that.
 7. Log the findings (Protocol 5) and commit (Protocol 7), including `docs/wiki/checks/`.
@@ -49,7 +49,7 @@ reviews the short list and decides; every decision is recorded so the next run i
 - **Budget:** `check` and `selftest` estimate each paid stage before sending it and stop at `--max-cost`
   (default $1). Tags, section labels and pair judgments are cached by text, so an unchanged re-run is free
   and a run cut short keeps what it already paid for.
-- **Measure, don't assume:** `jevauto wiki selftest <repo>` plants two kinds of contradiction in a
+- **Measure, don't assume:** `jeverifier wiki selftest <repo>` plants two kinds of contradiction in a
   scratch copy (a changed count; a flipped rule word such as never → always) and reports, per plant,
   both texts, its rank in each list, and why it was missed if it was. Read the plant texts before
   trusting the figure. Run it after changing anything above, and now and then as the docs grow.

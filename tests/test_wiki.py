@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from jevauto import wiki
+from jeverifier import wiki
 
 
 def make_repo(tmp_path):
@@ -45,9 +45,9 @@ def test_coverage_reports_orphans_and_broken_links(tmp_path):
 def test_cli_parses_every_command(capsys):
     import pytest
 
-    from jevauto import cli
+    from jeverifier import cli
 
-    for argv in (["wiki", "--help"], ["ctx", "--help"], ["keys", "--help"], ["run", "--help"]):
+    for argv in (["wiki", "--help"], ["ctx", "--help"], ["keys", "--help"]):
         with pytest.raises(SystemExit) as e:
             cli.main(argv)
         assert e.value.code == 0

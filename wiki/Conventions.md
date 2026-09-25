@@ -1,6 +1,6 @@
-# jevauto wiki — conventions
+# JeVerifier wiki — conventions
 
-This is the living wiki for **jevauto**. It lives in the repo (`docs/wiki/`) so docs move with the code in the same commits. The project's
+This is the living wiki for **JeVerifier**. It lives in the repo (`docs/wiki/`) so docs move with the code in the same commits. The project's
 existing docs stay where they are; the wiki links into them and adds overview pages, a doc map, session logs,
 and consistency checks. Maintenance follows the protocols in `protocols/`.
 
@@ -8,7 +8,7 @@ and consistency checks. Maintenance follows the protocols in `protocols/`.
 
 - `home.md` — front door; every page must be reachable from here (Protocol 6)
 - `overview.md` — what the project is and how it fits together, in one page
-- `map.md` — generated section map of the project's own docs (`jevauto wiki map`)
+- `map.md` — generated section map of the project's own docs (`jeverifier wiki map`)
 - `sessions/` — `index.md` plus one Jev-triaged log per session (Protocol 5)
 - `meta/` — style guide and how the AI-maintained wiki works
 - `protocols/` — maintenance workflows, invoked as "run Protocol N"
@@ -20,8 +20,8 @@ and consistency checks. Maintenance follows the protocols in `protocols/`.
 - Pages end with a **Related pages** section.
 - Commits follow the host repo's rules: authored by the owner only, no attribution trailer; push only when asked.
 - Verification command for this project: `.venv\Scripts\python -m pytest -q`.
-- **Public mirror.** This repo is private; the public repo [jevauto](https://github.com/silvariasereneblossom/jevauto)
-  gets only what `publish.json` lists, via `jevauto wiki publish . <public checkout>`: the source, and these pages
+- **Public mirror.** This repo is private; the public repo [jeverifier](https://github.com/silvariasereneblossom/jeverifier)
+  gets only what `publish.json` lists, via `jeverifier wiki publish . <public checkout>`: the source, and these pages
   on its GitHub Wiki (a GitHub Action copies them over). Session logs, the doc map and any page whose first line is
   `<!-- INTERNAL ONLY -->` never go out, and the publish refuses to write anything that names a private project.
   Public pages describe private projects only generically.

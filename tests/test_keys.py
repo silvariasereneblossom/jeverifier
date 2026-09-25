@@ -7,7 +7,7 @@ import pytest
 from keyring.backend import KeyringBackend
 from keyring.errors import PasswordDeleteError
 
-from jevauto import jev, keys
+from jeverifier import jev, keys
 
 
 class MemoryKeyring(KeyringBackend):
@@ -32,8 +32,8 @@ def memory_vault(monkeypatch):
     previous = keyring.get_keyring()
     keyring.set_keyring(MemoryKeyring())
     monkeypatch.setattr(keys, "_windows_user_env", lambda name: None)
-    for k in ("TYPESAFE_API_KEY", "OPENJEV_API_KEY", "ANTHROPIC_API_KEY", "MY_SERVICE_API_KEY",
-              "JEVAUTO_JEV_PROVIDER"):
+    for k in ("TYPESAFE_API_KEY", "OPENJEV_API_KEY", "MY_SERVICE_API_KEY",
+              "JEVERIFIER_JEV_PROVIDER"):
         monkeypatch.delenv(k, raising=False)
     yield
     keyring.set_keyring(previous)
@@ -63,7 +63,7 @@ def test_provider_prefers_typesafe_then_openjev(monkeypatch):
     keys.set_("TYPESAFE_API_KEY", "sk-key-1234567890")
     monkeypatch.delenv("OPENJEV_API_KEY", raising=False)
     assert jev.choose().name == "typesafe"
-    monkeypatch.setenv("JEVAUTO_JEV_PROVIDER", "openjev")
+    monkeypatch.setenv("JEVERIFIER_JEV_PROVIDER", "openjev")
     p = jev.choose()
     assert (p.name, p.base_url, p.model) == ("openjev", "https://api.openjev.sh", "openjev")
 

@@ -28,7 +28,7 @@ TypeSafe's list price), and a full contradiction run about $1.
 
 - Everything depends on a Jev provider. Caches are kept per model, so a model change starts a fresh cache.
 - Code extraction covers GDScript only.
-- Recall figures come from one project; run `jevauto wiki selftest` on yours before relying on them.
+- Recall figures come from one project; run `jeverifier wiki selftest` on yours before relying on them.
 
 ## Related pages
 

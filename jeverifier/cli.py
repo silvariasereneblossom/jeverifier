@@ -1,4 +1,4 @@
-"""Command line: `jevauto keys …` to manage API keys, `jevauto ctx|wiki …` for docs, `jevauto run …` to automate."""
+"""Command line: `jeverifier keys …` to manage API keys, `jeverifier ctx|wiki …` for docs, `jeverifier run …` to automate."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def _wiki(args: argparse.Namespace) -> int:
         if stats.get("mode") == "delta":
             print(f"delta: {stats['new_claims']} new or changed statements -> {stats['listed']} pairs to review")
         else:
-            print("full ranking (first run or --deep); after reviewing, run: jevauto wiki accept <repo>")
+            print("full ranking (first run or --deep); after reviewing, run: jeverifier wiki accept <repo>")
         print(stats)
     elif args.wiki_cmd == "accept":
         path, info = consistency.accept(repo, git_ref=args.git_ref)
@@ -108,58 +108,6 @@ def _wiki(args: argparse.Namespace) -> int:
         print("broken links:", *([f"{a} -> {b}" for a, b in broken] or ["none"]), sep="\n  ")
         return 1 if orphans or broken else 0
     return 0
-
-
-def _run(args: argparse.Namespace) -> int:
-    import os
-
-    from . import jev
-
-    try:
-        provider = jev.choose()
-    except RuntimeError as err:
-        print(err, file=sys.stderr)
-        return 2
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("Missing ANTHROPIC_API_KEY for the built-in planner. Add it in the keys window "
-              "(jevauto keys gui), or drive jevauto from Claude Code via its MCP server instead.",
-              file=sys.stderr)
-        return 2
-
-    from .gate import JevGate
-    from .planner import Hooks, Runner
-
-    if args.window or args.launch:
-        from .desktop import DesktopSurface
-
-        surface = DesktopSurface(window=args.window, launch=args.launch)
-        title = surface.window.window_text()
-        if input(f"Attach to window {title!r}? Its contents will be sent to Claude and Jev "
-                 "(secret-looking strings are masked). [y/N] ").strip().lower() != "y":
-            return 1
-    else:
-        from .browser import BrowserSurface
-
-        surface = BrowserSurface(headless=args.headless)
-        if args.url:
-            surface.navigate(args.url)
-
-    hooks = Hooks(
-        ask=lambda q: input(f"\n[claude asks] {q}\n> "),
-        confirm=lambda d: input(f"\n[confirm irreversible action]\n    {d}\n  Proceed? [y/N] ").strip().lower() == "y",
-        log=print,
-    )
-    try:
-        print(f"Jev via {provider.name} ({args.jev_model or provider.model})")
-        with jev.client(provider, model=args.jev_model) as jev_client:
-            runner = Runner(surface, JevGate(jev_client), hooks, effort=args.effort, max_steps=args.max_steps)
-            result = runner.run(args.task)
-    finally:
-        if not args.keep_open:
-            surface.close()
-    print(f"\n{'SUCCESS' if result.get('success') else 'NOT COMPLETED'}: {result.get('summary')}")
-    print(f"trace: {runner.trace_path}")
-    return 0 if result.get("success") else 1
 
 
 def _wiki_parser(sub) -> None:
@@ -205,7 +153,7 @@ def _wiki_parser(sub) -> None:
 
 
 def _parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="jevauto", description="Browser/desktop automation with a Jev fidelity layer.")
+    p = argparse.ArgumentParser(prog="jeverifier", description="JeVerifier: a Jev coding harness.")
     sub = p.add_subparsers(dest="cmd", required=True)
     ks = sub.add_parser("keys", help="manage API keys in Windows Credential Manager").add_subparsers(dest="keys_cmd", required=True)
     s = ks.add_parser("set", help="store a key (hidden prompt, or --clipboard)")
@@ -217,7 +165,7 @@ def _parser() -> argparse.ArgumentParser:
     ks.add_parser("delete").add_argument("name")
 
     c = sub.add_parser("ctx", help="context harness: index docs, find what a task needs, digest a session")
-    c.add_argument("--out", help="output folder (default: jev-automation/out)")
+    c.add_argument("--out", help="output folder (default: out/ in the jeverifier checkout)")
     cs = c.add_subparsers(dest="ctx_cmd", required=True)
     cs.add_parser("index", help="write a readable section index of a repo's Markdown docs").add_argument("repo")
     cf = cs.add_parser("find", help="Jev-picked reading list for a task, within a token budget")
@@ -232,16 +180,6 @@ def _parser() -> argparse.ArgumentParser:
     cd.add_argument("--handover", help="current handover file; open items it resolves are set aside")
 
     _wiki_parser(sub)
-    r = sub.add_parser("run", help="run a task")
-    r.add_argument("task")
-    r.add_argument("--url", help="browser: start page")
-    r.add_argument("--window", help="desktop: regex for the target window title")
-    r.add_argument("--launch", help="desktop: command to start the app first (use with --window)")
-    r.add_argument("--headless", action="store_true")
-    r.add_argument("--keep-open", action="store_true", help="leave the browser open at the end")
-    r.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"], help="Claude planner effort")
-    r.add_argument("--max-steps", type=int, default=40)
-    r.add_argument("--jev-model", help="override the provider's default model (typesafe: jev-1.13.0)")
     return p
 
 
@@ -252,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd != "keys":
         keys.load_into_env()  # everything but key management talks to Jev or Claude
     try:
-        return {"keys": _keys, "ctx": _ctx, "wiki": _wiki}.get(args.cmd, _run)(args)
+        return {"keys": _keys, "ctx": _ctx, "wiki": _wiki}[args.cmd](args)
     except Exception as err:
         from .consistency import CostLimit
         from keyring.errors import KeyringError

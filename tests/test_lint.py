@@ -7,8 +7,8 @@ import json
 import httpx2
 from typesafe_sdk import AsyncTypeSafeClient
 
-from jevauto import lint
-from jevauto.consistency import core, record_verdict
+from jeverifier import lint
+from jeverifier.consistency import core, record_verdict
 
 RULE = {"id": "view_never_writes_model", "paths": ["scripts/presentation/"],
         "rule": "A view never writes the model.", "exceptions": ["Setup may spawn."], "true": "It writes.", "false": "It only reads."}

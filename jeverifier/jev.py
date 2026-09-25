@@ -7,7 +7,7 @@ works for either; only the base URL, key and model name differ.
             pinned or seen: re-check thresholds if its behavior shifts.
 
 Default: typesafe if TYPESAFE_API_KEY is available, otherwise openjev. Force one with
-JEVAUTO_JEV_PROVIDER=typesafe|openjev.
+JEVERIFIER_JEV_PROVIDER=typesafe|openjev.
 """
 
 from __future__ import annotations
@@ -36,16 +36,16 @@ PROVIDERS = {
 
 def choose() -> Provider:
     keys.load_into_env(tuple(p.key_env for p in PROVIDERS.values()))
-    forced = os.environ.get("JEVAUTO_JEV_PROVIDER", "").strip().lower()
+    forced = os.environ.get("JEVERIFIER_JEV_PROVIDER", "").strip().lower()
     if forced:
         if forced not in PROVIDERS:
-            raise RuntimeError(f"JEVAUTO_JEV_PROVIDER must be one of {', '.join(PROVIDERS)}")
+            raise RuntimeError(f"JEVERIFIER_JEV_PROVIDER must be one of {', '.join(PROVIDERS)}")
         provider = PROVIDERS[forced]
     else:
         provider = next((p for p in PROVIDERS.values() if os.environ.get(p.key_env)), PROVIDERS["typesafe"])
     if not os.environ.get(provider.key_env):
         raise RuntimeError("No Jev key stored. Add TYPESAFE_API_KEY or OPENJEV_API_KEY in the keys "
-                           "window (jevauto keys gui).")
+                           "window (jeverifier keys gui).")
     return provider
 
 

@@ -1,6 +1,6 @@
 """Small window for pasting API keys into Windows Credential Manager.
 
-Shows the keys jevauto knows about plus any custom ones you've added; "Add a key" stores a key
+Shows the keys jeverifier knows about plus any custom ones you've added; "Add a key" stores a key
 under any env-var-style name so other tools can use the same vault.
 """
 
@@ -15,7 +15,6 @@ from . import keys
 LABELS = {
     "TYPESAFE_API_KEY": "TypeSafe (Jev)",
     "OPENJEV_API_KEY": "OpenJEV (Jev)",
-    "ANTHROPIC_API_KEY": "Anthropic (Claude)",
 }
 
 
@@ -31,10 +30,6 @@ def _test(name: str, value: str) -> str:
             kwargs = {"base_url": provider.base_url} if provider.base_url else {}
             with TypeSafeClient(api_key=value, model=provider.model, **kwargs) as c:
                 c.system_one("ping", {"ok": Noul(instructions="Is this text the word ping?")})
-        elif name == "ANTHROPIC_API_KEY":
-            import anthropic
-
-            anthropic.Anthropic(api_key=value).models.list(limit=1)
         else:
             return "no test for this key"
         return "✓ works"
@@ -175,7 +170,7 @@ class App:
 
 def main() -> None:
     root = tk.Tk()
-    root.title("jevauto — API keys")
+    root.title("jeverifier — API keys")
     root.resizable(False, False)
     App(root)
     root.mainloop()

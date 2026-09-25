@@ -1,4 +1,4 @@
-"""Size limits for jevauto's own code: files ≤ 500 lines, functions ≤ 60 lines (the same standard as the projects).
+"""Size limits for jeverifier's own code: files ≤ 500 lines, functions ≤ 60 lines (the same standard as the projects).
 
 A file or function over the limit is a sign it holds more than one job; split it rather than raising the limit.
 """
@@ -6,7 +6,7 @@ A file or function over the limit is a sign it holds more than one job; split it
 import ast
 from pathlib import Path
 
-PACKAGE = Path(__file__).resolve().parent.parent / "jevauto"
+PACKAGE = Path(__file__).resolve().parent.parent / "jeverifier"
 MAX_FILE = 500
 MAX_FUNCTION = 60
 

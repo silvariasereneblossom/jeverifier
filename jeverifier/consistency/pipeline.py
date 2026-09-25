@@ -218,7 +218,7 @@ def accept(repo: Path, git_ref: str | None = None) -> tuple[Path, dict]:
     else:
         import subprocess
 
-        with tempfile.TemporaryDirectory(prefix="jevauto-accept-") as tmp:
+        with tempfile.TemporaryDirectory(prefix="jeverifier-accept-") as tmp:
             root = Path(tmp)
             for f in {s.file for s in secs}:
                 shown = subprocess.run(["git", "-C", str(repo), "show", f"{git_ref}:{f}"], capture_output=True)
@@ -255,7 +255,7 @@ def report(repo: Path, res: Result, top: int = REVIEW, top_numbers: int = NUM_RE
            f"{s.get('number_pairs', 0):,} number pairs and {s['pairs_judged']:,} other current-state pairs judged "
            f"({s['suppressed']} known false alarms skipped); Jev cost ${s['cost_usd']}.", "",
            "**Jev ranks; it does not decide.** Review each pair (Protocol 2) and record the verdict so the list "
-           "improves: `jevauto wiki verdict <repo> <id> contradiction|stale|false-alarm --note \"...\"`. A false alarm "
+           "improves: `jeverifier wiki verdict <repo> <id> contradiction|stale|false-alarm --note \"...\"`. A false alarm "
            "is not shown again until either statement changes. Not covered: contradictions inside one section, and "
            "statements without a number or rule word — Protocol 2's sampled pairs cover those.", "",
            f"## Number mismatches ({len(numbers)})", "",
@@ -288,7 +288,7 @@ def check(repo: Path, top: int = REVIEW, max_cost: float | None = 1.0, deep: boo
     if base is None or deep:
         why = "no baseline yet (first run)" if base is None else "--deep"
         mode = (f"**Full ranking** ({why}): the top {top} pairs and top {NUM_REVIEW} number mismatches. After the "
-                "review, record verdicts and run `jevauto wiki accept <repo>` so later checks show only what changed.")
+                "review, record verdicts and run `jeverifier wiki accept <repo>` so later checks show only what changed.")
         text, items = report(repo, res, top, mode=mode)
         res.stats.update(mode="full")
     else:

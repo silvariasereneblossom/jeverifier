@@ -17,7 +17,7 @@ A Godot tactics game with about 170k tokens of design docs and 1,400 GDScript fu
 
 ## Projecting it for your repo
 
-Two numbers decide most of it: **D**, the tokens of docs a session would otherwise read (`jevauto ctx index <repo>`
+Two numbers decide most of it: **D**, the tokens of docs a session would otherwise read (`jeverifier ctx index <repo>`
 lists every doc section with its size), and **B**, the reading-list budget of `ctx find` (25k by default).
 
 | Activity | Tokens without | Tokens with | Notes |
@@ -43,7 +43,7 @@ every session instead of rarely.
 
 These are projections, not guarantees. Recall is imperfect: a reading list can miss a section the task needs
 (Claude then opens it, which costs tokens back), and a digest can leave a turn out. Measure on your own repo
-with `jevauto wiki selftest` and by comparing a few sessions with and without the reading list.
+with `jeverifier wiki selftest` and by comparing a few sessions with and without the reading list.
 
 ## Related pages
 

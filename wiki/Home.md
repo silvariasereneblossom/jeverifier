@@ -1,6 +1,6 @@
-# jevauto
+# JeVerifier
 
-Browser and Windows-app automation where Claude plans and TypeSafe's Jev checks every action, plus Jev-powered tooling for coding work: rule checks, a context harness for cheap session starts, and this living-wiki kit.
+A Jev (TypeSafe) coding harness: task reading lists, session digests, and doc and code checks that, after one full review, only look at what changed.
 
 ## Start here
 
@@ -11,7 +11,7 @@ Browser and Windows-app automation where Claude plans and TypeSafe's Jev checks 
 
 ## Project docs
 
-- [README.md](https://github.com/silvariasereneblossom/jevauto/blob/main/README.md) · ≈1,335 tokens · Browser and Windows-app automation where **Claude plans**, **Jev (TypeSafe) checks every action before it runs**, and Playwright or Windows 
+- [README.md](https://github.com/silvariasereneblossom/jeverifier/blob/main/README.md) · ≈1,577 tokens · A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session so the session reads less and checks more: - *
 
 ## Keeping the wiki alive
 

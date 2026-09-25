@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from jevauto import publish
+from jeverifier import publish
 
 URL = "https://github.com/me/pub"
 

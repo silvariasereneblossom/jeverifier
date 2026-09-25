@@ -24,11 +24,24 @@ from pathlib import Path
 from typesafe_sdk import AsyncTypeSafeClient, Noul, RetryPolicy
 
 from . import jev
-from .model import redact
+
+# Secret-looking strings are masked before any text reaches Jev.
+_SECRET = re.compile(
+    r"(?:sk-[A-Za-z0-9_\-]{16,}|sk-ant-[A-Za-z0-9_\-]{16,}|github_pat_[A-Za-z0-9_]{8,}|gh[pousr]_[A-Za-z0-9]{20,}"
+    r"|xox[abprs]-[A-Za-z0-9\-]{10,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_\-]{30,}|eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]+"
+    r"|(?:api[_-]?key|token|secret|passw(?:or)?d)[_:=\s-]*[A-Za-z0-9_\-]{12,}"
+    r"|\b[A-Fa-f0-9]{32,}\b|\b(?=[A-Za-z0-9+_\-]*\d)[A-Za-z0-9+_\-]{40,}={0,2})",  # no '/': keeps URLs and paths
+    re.I,
+)
+
+
+def redact(text: str) -> str:
+    return _SECRET.sub("[redacted]", text) if text else text
+
 
 CHARS_PER_TOKEN = 4  # rough English/Markdown average; good enough for budgets
 SECTION_MAX = 6000
-OUT = Path(__file__).resolve().parent.parent / "out"  # jev-automation/out: indexes, review lists, Jev caches
+OUT = Path(__file__).resolve().parent.parent / "out"  # out/ in the checkout: indexes, review lists, Jev caches
 QUESTIONS_PER_REQUEST = 24
 
 
@@ -105,7 +118,7 @@ def write_index(repo: Path, out_dir: Path) -> Path:
     (out_dir / "index.json").write_text(json.dumps([asdict(s) for s in secs], indent=1), encoding="utf-8", newline="\n")
     md = [f"# Context index — {repo.name}", "",
           f"{len(secs)} sections, ≈{tok(sum(s.chars for s in secs)):,} tokens in total. "
-          "Read a section by its file and line range; `jevauto ctx find` picks the ones a task needs.", ""]
+          "Read a section by its file and line range; `jeverifier ctx find` picks the ones a task needs.", ""]
     for f in sorted({s.file for s in secs}):
         fs = [s for s in secs if s.file == f]
         md += [f"## {f}  (≈{tok(sum(s.chars for s in fs)):,} tokens)", "", "| lines | ≈tok | section | starts with |", "|---|---|---|---|"]

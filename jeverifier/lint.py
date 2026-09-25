@@ -1,8 +1,8 @@
-"""`jevauto wiki lint`: Jev checks each function against the project's semantic rules (docs/wiki/checks/lint.json).
+"""`jeverifier wiki lint`: Jev checks each function against the project's semantic rules (docs/wiki/checks/lint.json).
 
 Only for rules no parser can check ("UI code never writes application state"); mechanical rules belong in the project's
 own tools. A rule's `exceptions` list holds its sanctioned exceptions, each documented in the project first. Answers are cached by rule text + function text, so a repeat run pays only for changed functions, and a
-finding marked false-alarm (`jevauto wiki verdict`) stays silent until that function changes. GDScript only; add
+finding marked false-alarm (`jeverifier wiki verdict`) stays silent until that function changes. GDScript only; add
 a language when a project needs one.
 """
 
@@ -99,7 +99,7 @@ def lint(repo: Path, max_cost: float | None = 1.0) -> tuple[Path, dict]:
 def _report(repo: Path, findings: list[dict], stats: dict) -> Path:
     lines = [f"# Lint — {repo.resolve().name} — {dt.date.today().isoformat()}", "",
              f"{stats['findings']} findings in {stats['functions']:,} functions ({stats['asked_jev']} sent to Jev this run). "
-             "Open each at file:line; fix it, or record `jevauto wiki verdict <repo> <id> false-alarm`.", ""]
+             "Open each at file:line; fix it, or record `jeverifier wiki verdict <repo> <id> false-alarm`.", ""]
     for rule in sorted({f["rule"] for f in findings}):
         lines += [f"## {rule}", ""] + [f"- `{f['id']}` · {f['where']} `{f['name']}` · p={f['p']}"
                                        for f in sorted(findings, key=lambda f: -f["p"]) if f["rule"] == rule] + [""]
