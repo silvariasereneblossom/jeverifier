@@ -51,3 +51,12 @@ def test_cli_parses_every_command(capsys):
         with pytest.raises(SystemExit) as e:
             cli.main(argv)
         assert e.value.code == 0
+
+
+def test_a_repo_path_that_does_not_exist_is_an_error(tmp_path, monkeypatch, capsys):
+    from jeverifier import cli
+
+    monkeypatch.chdir(tmp_path)  # e.g. `jeverifier wiki check my-repo` run from inside my-repo
+    for argv in (["wiki", "check", "my-repo"], ["ctx", "find", "my-repo", "task"], ["wiki", "lint", "my-repo"]):
+        assert cli.main(argv) == 2
+    assert "use '.'" in capsys.readouterr().err

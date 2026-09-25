@@ -187,8 +187,12 @@ def main(argv: list[str] | None = None) -> int:
     for stream in (sys.stdout, sys.stderr):
         stream.reconfigure(encoding="utf-8", errors="replace")  # page text is arbitrary Unicode
     args = _parser().parse_args(argv)
+    if getattr(args, "repo", None) and not Path(args.repo).is_dir():  # a wrong path would find zero docs, silently
+        print(f"{args.repo}: no such directory from {Path.cwd()}. Repo paths are relative to where you run "
+              "jeverifier; inside the repo, use '.'.", file=sys.stderr)
+        return 2
     if args.cmd != "keys":
-        keys.load_into_env()  # everything but key management talks to Jev or Claude
+        keys.load_into_env()  # everything but key management talks to Jev
     try:
         return {"keys": _keys, "ctx": _ctx, "wiki": _wiki}[args.cmd](args)
     except Exception as err:

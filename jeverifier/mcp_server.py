@@ -22,7 +22,9 @@ mcp = MCPServer(name="jeverifier", instructions="Use context_find at the start o
 async def context_find(repo: str, task: str, budget_tokens: int = 25_000) -> str:
     """Reading list for `task`: the doc sections (file:line ranges) Jev judges relevant, within a
     token budget. Use at the start of a session instead of reading every doc; CLAUDE.md and
-    docs/HANDOVER.md are assumed already read."""
+    docs/HANDOVER.md are assumed already read. `repo` should be an absolute path."""
+    if not Path(repo).is_dir():
+        return f"Error: {repo} is not a directory (from {Path.cwd()}); pass the repo's absolute path."
     picked, total = await asyncio.to_thread(ctx.find, Path(repo), task, budget_tokens,
                                             0.5, ("CLAUDE.md", "docs/HANDOVER.md"))
     return ctx.render_reading_list(task, picked, total)
