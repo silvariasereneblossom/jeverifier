@@ -1,6 +1,7 @@
 # Mirrors wiki/ to this repo's GitHub Wiki. wiki/ is written by `jevauto wiki publish` from the private repo,
 # so every page here has already passed its allowlist, internal-marker and deny checks.
-# Needs the repo secret WIKI_PUSH_TOKEN: a fine-grained PAT with Contents read/write on this repo (covers its wiki).
+# Pushes with the Action's own token; a WIKI_PUSH_TOKEN secret (fine-grained PAT, Contents read/write) overrides it.
+# The wiki must exist first: create its first page once in the web UI.
 name: sync-wiki
 
 on:
@@ -8,6 +9,9 @@ on:
     branches: [main]
     paths: ["wiki/**", ".github/workflows/sync-wiki.yml"]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   sync:
@@ -18,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
-          token: ${{ secrets.WIKI_PUSH_TOKEN }}
+          token: ${{ secrets.WIKI_PUSH_TOKEN || github.token }}
           path: wiki-checkout
       - name: Mirror wiki/ into the GitHub Wiki
         run: |
