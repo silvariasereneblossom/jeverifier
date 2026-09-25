@@ -15,6 +15,24 @@ A Godot tactics game with about 170k tokens of design docs and 1,400 GDScript fu
 | Doc contradiction pass, after the first full review | re-read all docs | a few pairs per edited statement | ~99% per re-check |
 | Code rule audit | read ~350k tokens of code | the report and the flagged functions | ~99%; an unchanged re-run costs $0 |
 
+## First real milestone
+
+A four-phase implementation milestone in the same project, one agent per phase, each given its own ~25k
+reading list, against the nearest earlier milestone of the same shape run with the full read order. The tasks
+and model versions differ, so treat the ratios as indicative:
+
+| | Earlier milestone (full read order) | With reading lists | Change |
+|---|---|---|---|
+| Agent turns | 911 | 599 | −34% |
+| Context carried per turn (median / peak) | 365k / 914k | 291k / 506k | −20% / −45% |
+| Cache reads (76–86% of the bill) | 397M | 170M | −57% |
+| Fresh context written | 1.94M | 1.91M | flat |
+| Cost at the same model rates | ~$94 | ~$45 | about half |
+
+The saving did not come from loading less: agents loaded code instead of docs, so fresh context stayed flat.
+It came from fewer turns and a smaller context carried through each one. Reading-list misses: 54 sections
+opened beyond the lists, 29 of them code, which is what `ctx find --code` now covers.
+
 ## Projecting it for your repo
 
 Two numbers decide most of it: **D**, the tokens of docs a session would otherwise read (`jeverifier ctx index <repo>`
