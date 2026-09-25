@@ -6,7 +6,8 @@ Browser and Windows-app automation where Claude plans and TypeSafe's Jev checks 
 
 - [Overview](Overview) — the project in one page
 - [How it works](How-It-Works) — the coding harness: reading lists, digests, doc and code checks
-- [Measurements](Measurements) — what it catches, what it misses, what it saves
+- [Measurements](Measurements) — what it catches and what it misses
+- [Projected token savings](Token-Savings) — what it saves, and how to project it for your repo
 
 ## Project docs
 

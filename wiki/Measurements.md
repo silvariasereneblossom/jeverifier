@@ -1,4 +1,4 @@
-# Measurements: robustness and token savings
+# Measurements: what the harness catches
 
 Measured in September 2026 on one private project, a Godot tactics game with about 170k tokens of design
 docs and 1,400 GDScript functions, using Jev through OpenJEV. One project is a small sample: treat these as
@@ -19,18 +19,7 @@ that were read and judged valid.
 
 ## Token savings
 
-The savings are on reading and re-reading. Writing code costs what it did before.
-
-| Activity | Without | With | Saving |
-|---|---|---|---|
-| Loading docs at session start (docs-heavy repo) | ~170k | ~15–25k | ~85–90% |
-| Handover / context export | ~55k of conversation | ~5.6k digest | ~90% |
-| Doc contradiction pass, after the first full review | re-read all docs | a few pairs per edited statement | ~99% per re-check |
-| Code rule audit | read ~350k tokens of code | the report and the flagged functions | ~99%; an unchanged re-run costs $0 |
-
-For a typical session in a docs-heavy repo, expect **80–90% less context reading**. A repo with little
-documentation gains little from `ctx find`, but still gets the digest and the checks. The larger effect is
-that full doc and code audits become cheap enough to run every session instead of rarely.
+See [Projected token savings](Token-Savings): the measured savings, a formula for your own repo, and worked examples.
 
 Jev's own cost is small: the full first lint of 1,410 functions was about 0.5M Jev tokens (≈$0.03 at
 TypeSafe's list price), and a full contradiction run about $1.
@@ -45,3 +34,4 @@ TypeSafe's list price), and a full contradiction run about $1.
 
 - [Overview](Overview)
 - [How it works](How-It-Works)
+- [Projected token savings](Token-Savings)

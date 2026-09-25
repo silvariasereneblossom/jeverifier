@@ -28,6 +28,19 @@ Hard rules, applied in code no matter what the models say:
 - Screen text is treated as data, not instructions.
 - API-key and token-looking strings are masked before any screen content reaches Claude or Jev.
 
+## Projected token savings
+
+The coding harness cuts what a Claude session re-reads, not what it writes. Measured on one game project with
+about 170k tokens of design docs:
+
+- **Session start:** ~170k tokens of docs → a 15–25k reading list (~85–90% less).
+- **Handover:** a ~55k-token conversation → a ~5.6k digest (~90% less).
+- **Doc and code audits:** after the first full review, each re-check lists only what changed (~99% less).
+
+Projected per session (one start plus one handover): about 65% less reading for a repo with 20k tokens of docs,
+77% at 80k and 86% at 170k. The formula, worked examples and caveats are on the
+[Projected token savings](https://github.com/silvariasereneblossom/jevauto/wiki/Token-Savings) wiki page.
+
 ## Setup
 
 Linux and macOS:

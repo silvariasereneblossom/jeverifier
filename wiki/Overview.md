@@ -25,11 +25,12 @@ failure mode is leaving something out, which every part below measures.
 | Code rule check | `jevauto wiki lint` | [lint.py](https://github.com/silvariasereneblossom/jevauto/blob/main/jevauto/lint.py) |
 | API keys without env vars | `jevauto keys gui` | [keys.py](https://github.com/silvariasereneblossom/jevauto/blob/main/jevauto/keys.py) |
 
-How the coding parts work: [How it works](How-It-Works). What they catch and what they save:
-[Measurements](Measurements).
+How the coding parts work: [How it works](How-It-Works). What they catch:
+[Measurements](Measurements). What they save: [Projected token savings](Token-Savings).
 
 ## Related pages
 
 - [Home](Home)
 - [How it works](How-It-Works)
 - [Measurements](Measurements)
+- [Projected token savings](Token-Savings)
