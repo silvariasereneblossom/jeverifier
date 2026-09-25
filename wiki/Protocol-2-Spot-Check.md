@@ -36,7 +36,9 @@ reviews the short list and decides; every decision is recorded so the next run i
 5. **Fix**, re-run `check` (the fixes are new text, so their pairs appear in the delta), review those.
 6. **Accept:** `jeverifier wiki accept <repo>` records the reviewed text as the baseline
    (`docs/wiki/checks/baseline.json`, versioned). The next `check` should list 0 pairs until the docs
-   change. Use `--git-ref HEAD` to accept the committed text when the review covered that.
+   change. Run it on the reviewed working tree just before committing, so `baseline.json` lands in the
+   commit it describes; `--git-ref <ref>` accepts already-committed text instead, and the baseline then
+   rides in the next commit.
 7. Log the findings (Protocol 5) and commit (Protocol 7), including `docs/wiki/checks/`.
 
 ## Making the filter better over time

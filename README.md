@@ -127,6 +127,7 @@ The tests run offline and need no keys: the real TypeSafe SDK talks to a mock tr
 
 ## Known limits
 
+- `ctx find` ranks doc prose, not code: a task that pins an API still needs a read of that code.
 - Code rule checks extract GDScript functions only; other languages are added when a project needs them.
 - Recall figures come from one project; run `jeverifier wiki selftest` on yours before relying on them.
 - Jev 1.13 is weak at arithmetic, dates and counting (see the TypeSafe "jaggedness" page), so numbers are compared

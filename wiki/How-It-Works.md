@@ -10,7 +10,8 @@ Paid runs stop before they would pass `--max-cost` (default $1).
 A fresh session in a docs-heavy repo would read every design doc. `ctx find <repo> "<task>"` splits the
 Markdown docs into sections, asks Jev which sections the task needs, and returns a reading list inside a
 token budget (default 25k). The files a session always loads (`CLAUDE.md`, a handover) are listed but not
-scored. The list is a starting point: Claude still opens anything the task turns out to need.
+scored. The list is a starting point: Claude still opens anything the task turns out to need, and always
+the code for any API the task pins, since the ranker reads docs, not function signatures.
 
 ## Exporting context: `ctx digest` and session logs
 
