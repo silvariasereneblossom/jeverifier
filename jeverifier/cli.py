@@ -39,7 +39,8 @@ def _ctx(args: argparse.Namespace) -> int:
         repo = Path(args.repo)
         print(f"wrote {ctx.write_index(repo, out / repo.resolve().name)}")
     elif args.ctx_cmd == "find":
-        picked, total = ctx.find(Path(args.repo), args.task, budget_tokens=args.budget, always=tuple(args.always))
+        picked, total = ctx.find(Path(args.repo), args.task, budget_tokens=args.budget, always=tuple(args.always),
+                                code=tuple(args.code))
         print(ctx.render_reading_list(args.task, picked, total))
     elif args.ctx_cmd == "digest":
         transcript = ctx.resolve_transcript(args.session)
@@ -174,6 +175,7 @@ def _parser() -> argparse.ArgumentParser:
     cf.add_argument("--budget", type=int, default=25_000, help="max tokens of sections to list")
     cf.add_argument("--always", nargs="*", default=["CLAUDE.md", "docs/HANDOVER.md"],
                     help="files the session loads anyway (not scored)")
+    cf.add_argument("--code", nargs="*", default=[], help="globs of code files whose API may be listed, e.g. 'scripts/**/*.gd' 'tests/**/*.gd' (GDScript today)")
     cd = cs.add_parser("digest", help="Jev-triaged digest of a Claude Code session transcript")
     cd.add_argument("session", help="transcript path, session id (prefix), or 'latest'")
     cd.add_argument("--since", help="ISO time, e.g. 2026-09-20 — digest only what came after")

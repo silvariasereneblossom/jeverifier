@@ -82,6 +82,7 @@ claude mcp add jeverifier --scope user -- <checkout>\.venv\Scripts\python.exe -m
 
 ```bash
 jeverifier ctx find <repo> "<task>"          # doc sections the task needs, within a token budget (default 25k)
+jeverifier ctx find <repo> "<task>" --code "scripts/**/*.gd"   # ...and the code APIs it touches
 jeverifier ctx index <repo>                  # every doc section with its size
 ```
 
@@ -127,7 +128,7 @@ The tests run offline and need no keys: the real TypeSafe SDK talks to a mock tr
 
 ## Known limits
 
-- `ctx find` ranks doc prose, not code: a task that pins an API still needs a read of that code.
+- `ctx find --code` lists code APIs for GDScript only; without it, a task that pins an API still needs a code read.
 - Code rule checks extract GDScript functions only; other languages are added when a project needs them.
 - Recall figures come from one project; run `jeverifier wiki selftest` on yours before relying on them.
 - Jev 1.13 is weak at arithmetic, dates and counting (see the TypeSafe "jaggedness" page), so numbers are compared

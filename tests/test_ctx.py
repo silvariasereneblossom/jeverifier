@@ -54,3 +54,18 @@ def test_secrets_are_redacted_before_jev_sees_them():
 def test_urls_and_paths_survive_redaction():
     url = "file:///C:/Users/someone/projects/jeverifier/docs/page.html"
     assert ctx.redact(url) == url
+
+
+def test_code_sections_hold_the_api_and_lists_show_full_heading_paths(tmp_path):
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/grid.gd").write_text(
+        "class_name Grid\nextends RefCounted\n\n## Cells a unit can reach.\nstatic func reach(cell: Vector2i) -> Array:\n"
+        "\tvar out := []\n\treturn out\n", encoding="utf-8")
+    secs = ctx.code_sections(tmp_path, ("scripts/**/*.gd",))
+    assert [(s.file, s.end) for s in secs] == [("scripts/grid.gd", 8)]
+    api = ctx.section_text(tmp_path, secs[0])
+    assert "static func reach(cell: Vector2i) -> Array:" in api and "## Cells a unit can reach." in api
+    assert "var out" not in api and "return out" not in api  # bodies stay out
+    doc = ctx.Section("ARCH.md", 10, 20, "Data > Tags > Known tags", 400, "")
+    out = ctx.render_reading_list("t", [(doc, 0.9), (secs[0], 0.8)], 1000)
+    assert "`ARCH.md:10-20` — Data > Tags > Known tags" in out and "`scripts/grid.gd` — API" in out

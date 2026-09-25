@@ -107,7 +107,30 @@ def index(repo: Path, globs: tuple[str, ...] = ("*.md", "docs/*.md")) -> list[Se
     return [s for p in files for s in sections_of(p, p.relative_to(repo).as_posix())]
 
 
+_API = ("##", "class_name", "extends", "signal", "const", "enum", "func", "static func", "var", "@export")
+
+
+def _api(lines: list[str]) -> str:
+    """A GDScript file as its callers see it: top-level declarations and ## doc comments, no bodies."""
+    return "\n".join(line for line in lines if line.startswith(_API))
+
+
+def code_sections(repo: Path, globs: tuple[str, ...]) -> list[Section]:
+    """One section per GDScript file, holding its API, so a reading list can point at the code a task touches
+    (reading lists over docs alone miss API surfaces). Other languages are added when a project needs them."""
+    out = []
+    for p in sorted({p for g in globs for p in repo.glob(g) if p.is_file() and p.suffix == ".gd"}):
+        lines = p.read_text(encoding="utf-8", errors="replace").split("\n")
+        decls = [line for line in lines if line.startswith(_API) and not line.startswith("##")]
+        # Jev scores the API with its ## docs (they say what a function is for); the budget counts the
+        # declarations, which is what a reader skims before opening the functions the task touches.
+        out.append(Section(p.relative_to(repo).as_posix(), 1, len(lines), "API", len("\n".join(decls)), ""))
+    return out
+
+
 def section_text(repo: Path, s: Section) -> str:
+    if s.file.endswith(".gd"):
+        return _api((repo / s.file).read_text(encoding="utf-8", errors="replace").split("\n"))
     lines = (repo / s.file).read_text(encoding="utf-8", errors="replace").split("\n")
     return "\n".join(lines[s.start - 1:s.end])
 
@@ -158,10 +181,11 @@ async def _score_sections(repo: Path, secs: list[Section], task: str, concurrenc
 
 
 def find(repo: Path, task: str, budget_tokens: int = 25_000, threshold: float = 0.5,
-         always: tuple[str, ...] = ()) -> tuple[list[tuple[Section, float]], int]:
+         always: tuple[str, ...] = (), code: tuple[str, ...] = ()) -> tuple[list[tuple[Section, float]], int]:
     """Sections most relevant to `task`, highest score first, within `budget_tokens`.
-    `always` names files that are loaded anyway (e.g. the brief) and so are not scored."""
-    secs = [s for s in index(repo) if s.file not in always]
+    `always` names files that are loaded anyway (e.g. the brief) and so are not scored; `code` globs add each
+    matching code file's API as a section."""
+    secs = [s for s in index(repo) + code_sections(repo, code) if s.file not in always]
     scores = asyncio.run(_score_sections(repo, secs, task))
     ranked = sorted(secs, key=lambda s: -scores[s.id])
     picked, used = [], 0
@@ -179,9 +203,14 @@ def render_reading_list(task: str, picked: list[tuple[Section, float]], total_to
     used = sum(tok(s.chars) for s, _ in picked)
     out = [f"## Reading list for: {task}", "",
            f"{len(picked)} sections, ≈{used:,} tokens (of ≈{total_tokens:,} across all docs). "
-           "Read these ranges; open other sections only if one of these points to them.", ""]
+           "Read these ranges; open other sections only if one of these points to them. If a file has changed since, "
+           "find the range again by its heading path.", ""]
     for s, p in sorted(picked, key=lambda sp: (sp[0].file, sp[0].start)):
-        out.append(f"- `{s.file}:{s.start}-{s.end}` — {s.heading.split(' > ')[-1]} (≈{tok(s.chars):,} tok, relevance {p:.2f})")
+        if s.file.endswith(".gd"):
+            out.append(f"- `{s.file}` — API: its declarations, then the functions the task touches "
+                       f"(≈{tok(s.chars):,} tok of declarations, relevance {p:.2f})")
+        else:
+            out.append(f"- `{s.file}:{s.start}-{s.end}` — {s.heading} (≈{tok(s.chars):,} tok, relevance {p:.2f})")
     return "\n".join(out)
 
 

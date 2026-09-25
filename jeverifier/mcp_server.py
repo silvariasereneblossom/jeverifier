@@ -19,14 +19,15 @@ mcp = MCPServer(name="jeverifier", instructions="Use context_find at the start o
 
 
 @mcp.tool()
-async def context_find(repo: str, task: str, budget_tokens: int = 25_000) -> str:
+async def context_find(repo: str, task: str, budget_tokens: int = 25_000, code: list[str] | None = None) -> str:
     """Reading list for `task`: the doc sections (file:line ranges) Jev judges relevant, within a
     token budget. Use at the start of a session instead of reading every doc; CLAUDE.md and
-    docs/HANDOVER.md are assumed already read. `repo` should be an absolute path."""
+    docs/HANDOVER.md are assumed already read. `repo` should be an absolute path. `code`: globs of code files
+    whose API may be listed too (e.g. ["scripts/**/*.gd"]); tasks that pin an API need this."""
     if not Path(repo).is_dir():
         return f"Error: {repo} is not a directory (from {Path.cwd()}); pass the repo's absolute path."
     picked, total = await asyncio.to_thread(ctx.find, Path(repo), task, budget_tokens,
-                                            0.5, ("CLAUDE.md", "docs/HANDOVER.md"))
+                                            0.5, ("CLAUDE.md", "docs/HANDOVER.md"), tuple(code or ()))
     return ctx.render_reading_list(task, picked, total)
 
 

@@ -10,8 +10,18 @@ Paid runs stop before they would pass `--max-cost` (default $1).
 A fresh session in a docs-heavy repo would read every design doc. `ctx find <repo> "<task>"` splits the
 Markdown docs into sections, asks Jev which sections the task needs, and returns a reading list inside a
 token budget (default 25k). The files a session always loads (`CLAUDE.md`, a handover) are listed but not
-scored. The list is a starting point: Claude still opens anything the task turns out to need, and always
-the code for any API the task pins, since the ranker reads docs, not function signatures.
+scored. The list is a starting point: Claude still opens anything the task turns out to need.
+
+Docs alone miss code: in the first real milestone, 29 of 54 reading-list misses were code (APIs the task
+pinned, and test files read to copy a house pattern). `--code 'scripts/**/*.gd' 'tests/**/*.gd'` adds each
+matching file's API (top-level declarations with their doc comments) as a section Jev can rank like any other;
+the budget counts only the declarations, since a reader skims those before opening the functions it touches.
+
+**In a multi-agent milestone**, give each agent its own list, and generate it when that agent starts, not all
+at the start: earlier phases move the docs, and a list made before them points at stale ranges (the full
+heading path on each line lets a reader find a moved range again). Put the milestone contract in `--always`,
+since it already carries the design decisions. An integrator's task text should name the files changed since
+the milestone began, so its list follows the diff rather than the plan.
 
 ## Exporting context: `ctx digest` and session logs
 
