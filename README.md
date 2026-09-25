@@ -25,7 +25,10 @@ Measured on one game project (about 170k tokens of design docs, 1,400 GDScript f
 - **Token savings are modest.** Jev replaces judgments and lookups, not code generation, so expect around 10% at
   most from Jev alone. In the first milestone measured, reading lists did not reduce what agents read, and all doc
   reading is 6–12% of the token bill.
-- **Not measured yet:** whether the checks catch logic bugs, as opposed to rule and consistency problems.
+- **Logic bugs: not caught.** Replayed on real bugs a review later confirmed, the code rule check flagged none of
+  the buggy functions, even with the rule reworded after the fact. It checks one function at a time, and such
+  bugs often span two (a preview branch and a commit branch). It keeps code consistent with its rules; it does
+  not replace review.
 
 Numbers and method: [Measurements](https://github.com/silvariasereneblossom/jeverifier/wiki/Measurements),
 [Token savings](https://github.com/silvariasereneblossom/jeverifier/wiki/Token-Savings).
@@ -143,5 +146,7 @@ The tests run offline and need no keys: the real TypeSafe SDK talks to a mock tr
 - `ctx find --code` lists code APIs for GDScript only; without it, a task that pins an API still needs a code read.
 - Code rule checks extract GDScript functions only; other languages are added when a project needs them.
 - Recall figures come from one project; run `jeverifier wiki selftest` on yours before relying on them.
+- Checks judge one function or one pair of statements at a time, so a defect that only shows across two
+  functions is invisible to them.
 - Jev 1.13 is weak at arithmetic, dates and counting (see the TypeSafe "jaggedness" page), so numbers are compared
   in code and Jev only judges whether two statements are about the same thing.

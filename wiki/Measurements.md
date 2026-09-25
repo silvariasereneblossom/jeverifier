@@ -24,11 +24,31 @@ See [Token savings](Token-Savings): what the first milestone measured, and how t
 Jev's own cost is small: the full first lint of 1,410 functions was about 0.5M Jev tokens (≈$0.03 at
 TypeSafe's list price), and a full contradiction run about $1.
 
+## Replays on real work
+
+Two questions were tested by replaying a finished milestone, with its code history and review record:
+
+- **Does the code rule check catch logic bugs?** Six functions holding real bugs that a review later confirmed
+  (a panel's forecast disagreeing with what the game executes) were judged against the project's written rule, at
+  the commit before the fix. None was flagged, and neither were the fixed versions or 73 unflagged functions from
+  the same files. With the rule reworded after the fact to describe this class of bug, still none was flagged, and
+  two fixed functions scored higher than their buggy versions: Jev reacted to wording in the code, not to its
+  logic. Such bugs often span two functions (a preview branch and a commit branch of one resolver), which a
+  one-function-at-a-time check cannot see.
+- **Could Jev pick the functions an agent needs, so it reads functions instead of files?** For every code file
+  the milestone's agents read, Jev judged each function against that agent's task, and was scored on the
+  functions the agent went on to change. At the threshold that kept most of them it found 79% (53 of 67) while
+  cutting code reading by only 9%; at the threshold that cut reading by half it found 49%. Implementing agents
+  fared best (8 of 8 and 15 of 16, with about a quarter less code), but an integrating agent, whose task does not
+  name the code it ends up changing, got 2 of 10. Not safe as a replacement for reading.
+
 ## Known limits
 
 - Everything depends on a Jev provider. Caches are kept per model, so a model change starts a fresh cache.
 - Code extraction covers GDScript only.
 - Recall figures come from one project; run `jeverifier wiki selftest` on yours before relying on them.
+- Checks judge one function or one pair of statements at a time: a defect that only shows across two
+  functions is invisible to them.
 
 ## Related pages
 

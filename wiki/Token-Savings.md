@@ -53,6 +53,11 @@ Lists generated per phase against the tree that phase inherits, with the contrac
 ranked alongside docs (`--code`), measured the same way: how many code misses the lists cover, and whether
 code carry falls.
 
+Already tested and set aside: letting Jev pick individual functions for agents to read instead of whole files.
+Replayed on the same milestone, it missed a fifth of the functions agents went on to change while saving only 9%
+of code reading ([Measurements](Measurements#replays-on-real-work)). With Jev alone, expect savings of a few
+percent to around 10%; the checks are the reason to use it.
+
 ## Related pages
 
 - [Measurements](Measurements)
