@@ -46,6 +46,11 @@ You need a key for one of these:
 
 To force one, set `JEVERIFIER_JEV_PROVIDER=typesafe` or `openjev`.
 
+OpenJEV allows 10 requests per second per account, shared by all your keys; going over it can lock the
+account out for a while (reported as 503 "Authentication is temporarily unavailable"). JeVerifier sends at
+most 5 requests per second per process, retries included, so two runs at once stay under the limit; set
+`JEVERIFIER_RPS` to change that.
+
 ### API keys (no env-var editing)
 
 `jeverifier keys gui` opens a window for pasting keys; "Add a key" stores a key for any other service under an

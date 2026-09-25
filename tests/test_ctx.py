@@ -69,3 +69,19 @@ def test_code_sections_hold_the_api_and_lists_show_full_heading_paths(tmp_path):
     doc = ctx.Section("ARCH.md", 10, 20, "Data > Tags > Known tags", 400, "")
     out = ctx.render_reading_list("t", [(doc, 0.9), (secs[0], 0.8)], 1000)
     assert "`ARCH.md:10-20` — Data > Tags > Known tags" in out and "`scripts/grid.gd` — API" in out
+
+
+def test_requests_are_spaced_to_the_rate_limit():
+    import asyncio
+    import time
+
+    import httpx2
+
+    async def run():
+        t = ctx._Throttle(50, httpx2.MockTransport(lambda r: httpx2.Response(200)))
+        async with httpx2.AsyncClient(transport=t) as c:
+            start = time.monotonic()
+            await asyncio.gather(*(c.get("https://x.test/") for _ in range(6)))
+            return time.monotonic() - start
+
+    assert asyncio.run(run()) >= 5 / 50 * 0.9  # six requests at 50/s span at least five gaps

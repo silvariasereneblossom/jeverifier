@@ -18,9 +18,11 @@ import asyncio
 import json
 import os
 import re
+import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import httpx2
 from typesafe_sdk import AsyncTypeSafeClient, Noul, RetryPolicy
 
 from . import jev
@@ -154,10 +156,33 @@ def write_index(repo: Path, out_dir: Path) -> Path:
 
 # ---------------------------------------------------------------- find
 
+# OpenJEV allows 10 requests/s per account, shared by every key; going over it locked the account out for a
+# while (answered as 503 "Authentication is temporarily unavailable"). 5/s per process leaves room for two.
+RATE = float(os.environ.get("JEVERIFIER_RPS", "5"))
+
+
+class _Throttle(httpx2.AsyncBaseTransport):
+    """Spaces this process's requests (retries included) at most `rate` per second."""
+
+    def __init__(self, rate: float, inner: httpx2.AsyncBaseTransport | None = None) -> None:
+        self.inner, self.gap, self.next, self.lock = inner or httpx2.AsyncHTTPTransport(), 1 / rate, 0.0, asyncio.Lock()
+
+    async def handle_async_request(self, request):
+        async with self.lock:
+            now = time.monotonic()
+            wait, self.next = self.next - now, max(now, self.next) + self.gap
+        if wait > 0:
+            await asyncio.sleep(wait)
+        return await self.inner.handle_async_request(request)
+
+    async def aclose(self) -> None:
+        await self.inner.aclose()
+
+
 def _client() -> AsyncTypeSafeClient:
     p = jev.choose()
     kwargs = {"base_url": p.base_url} if p.base_url else {}
-    return AsyncTypeSafeClient(api_key=os.environ[p.key_env], model=p.model,  # retries ride out 429s
+    return AsyncTypeSafeClient(api_key=os.environ[p.key_env], model=p.model, transport=_Throttle(RATE),
                                retry=RetryPolicy(max_retries=10, backoff_max=20.0, timeout=120.0), **kwargs)
 
 
