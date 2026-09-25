@@ -1,4 +1,3 @@
-<!-- Adapted from the IridescentCraft wiki template (designdocs/wiki-template). -->
 # Protocol 4: Recursive Harmonize
 
 Apply Protocol 1 to the changes just made, then repeat on the new changes, continuing until a pass produces zero findings. Each iteration's scope is the files touched by the previous iteration's fixes plus all files that cross-reference them.

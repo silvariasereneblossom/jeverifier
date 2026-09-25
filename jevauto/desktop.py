@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import re
+import sys
 import time
 
-from pywinauto import Application, Desktop, mouse
+if sys.platform != "win32":
+    raise ImportError("Desktop mode drives Windows UI Automation, so it runs on Windows only; use the browser here.")
+
+from pywinauto import Application, Desktop, mouse  # noqa: E402
 
 from .model import Action, Element, Observation
 

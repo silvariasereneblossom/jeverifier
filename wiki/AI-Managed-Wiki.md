@@ -1,4 +1,3 @@
-<!-- Adapted from the IridescentCraft wiki template (designdocs/wiki-template). -->
 # AI-Managed Documentation
 
 **Status:** Template

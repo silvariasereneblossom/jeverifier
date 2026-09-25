@@ -1,4 +1,4 @@
-"""Living wiki inside a repo (docs/wiki/), after the IridescentCraft wiki template.
+"""Living wiki inside a repo (docs/wiki/).
 
   init      Scaffold docs/wiki/: conventions, style guide, the seven protocols, home page, doc map,
             session-log index; add a pointer to the repo's CLAUDE.md.

@@ -1,4 +1,3 @@
-<!-- Adapted from the IridescentCraft wiki template (designdocs/wiki-template). -->
 # Protocol 1: Harmonize
 
 Perform a full wiki harmonization pass across a specified topic area.

@@ -73,7 +73,7 @@ clean ones; a rule that cannot separate the two (for example *comments explain w
 
 ## The wiki itself
 
-`wiki init` sets up `docs/wiki/` in a repo, after the IridescentCraft wiki template: conventions, a style
+`wiki init` sets up `docs/wiki/` in a repo: conventions, a style
 guide, seven maintenance protocols, a home page, an overview, a generated doc map and session logs. The
 project's existing docs stay where they are and the wiki links into them. Selected pages are mirrored to
 the public GitHub Wiki (see [Conventions](Conventions)).

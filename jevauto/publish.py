@@ -1,4 +1,4 @@
-"""`jevauto wiki publish`: mirror a private repo's public parts into a public checkout, as IridescentCraft does.
+"""`jevauto wiki publish`: mirror a private repo's public parts into a public checkout.
 
 `publish.json` at the repo root is an allowlist: `files` (globs, copied as they are) and `wiki` (internal page ->
 public GitHub Wiki page name). Everything else stays private. On the way out, relative links become wiki page

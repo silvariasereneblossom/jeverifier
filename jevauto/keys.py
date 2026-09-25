@@ -1,4 +1,5 @@
-"""API keys stored in the OS credential vault (Windows Credential Manager via keyring).
+"""API keys stored in the OS credential vault via keyring: Windows Credential Manager, the macOS Keychain, or the
+Linux Secret Service (GNOME Keyring, KWallet). Without a vault, keys come from environment variables.
 
 Keys never touch disk in plaintext or shell history. At startup `load_into_env()` copies
 any stored key into os.environ for this process only, so the TypeSafe and Anthropic SDKs
@@ -16,7 +17,7 @@ import os
 import re
 
 import keyring
-from keyring.errors import PasswordDeleteError
+from keyring.errors import KeyringError, PasswordDeleteError
 
 SERVICE = "jevauto"
 KNOWN_KEYS = ("TYPESAFE_API_KEY", "OPENJEV_API_KEY", "ANTHROPIC_API_KEY")
@@ -128,11 +129,14 @@ def load_into_env(only: tuple[str, ...] | None = None) -> list[str]:
     """Populate os.environ from the vault, then from saved Windows user env vars.
     A variable already in this process's environment wins. Returns names loaded."""
     loaded = []
-    for name in only or names():
-        if os.environ.get(name):
-            continue
-        value = get(name) or _windows_user_env(name)
-        if value:
-            os.environ[name] = value
-            loaded.append(name)
+    try:
+        for name in only or names():
+            if os.environ.get(name):
+                continue
+            value = get(name) or _windows_user_env(name)
+            if value:
+                os.environ[name] = value
+                loaded.append(name)
+    except KeyringError:  # no OS vault (e.g. a headless Linux box): keys come from environment variables only
+        pass
     return loaded

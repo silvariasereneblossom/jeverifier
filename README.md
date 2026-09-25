@@ -30,9 +30,25 @@ Hard rules, applied in code no matter what the models say:
 
 ## Setup
 
+Linux and macOS:
+
 ```bash
-python -m venv .venv && .venv\Scripts\pip install -e ".[dev]" && .venv\Scripts\playwright install chromium
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]" && .venv/bin/playwright install --with-deps chromium
+source .venv/bin/activate   # puts `jevauto` on PATH
 ```
+
+On Debian and Ubuntu, the system Python needs `sudo apt install python3-venv` first, and `python3-tk` if you want
+the keys window. `--with-deps` installs Chromium's system libraries, so it asks for sudo.
+
+Windows (PowerShell):
+
+```powershell
+python -m venv .venv; .venv\Scripts\pip install -e ".[dev]"; .venv\Scripts\playwright install chromium
+.venv\Scripts\Activate.ps1
+```
+
+Browser automation and the whole coding harness (`jevauto ctx`, `jevauto wiki`) run on all three. Desktop-app
+automation (`--window`, `--launch`, the `attach_window` tool) drives Windows UI Automation, so it is Windows-only.
 
 ### Jev provider
 
@@ -46,7 +62,8 @@ To force one, set `JEVAUTO_JEV_PROVIDER=typesafe` or `openjev`.
 
 `jevauto keys gui` opens a window for pasting keys. It lists the TypeSafe, OpenJEV and Anthropic keys, and "Add a key" stores a key for any other service under an env-var-style name. Every stored key is loaded into the environment of each jevauto run.
 
-Keys go in Windows Credential Manager and are loaded automatically when a task runs:
+Keys go in the OS credential vault (Windows Credential Manager, the macOS Keychain, or GNOME Keyring / KWallet on
+Linux) and are loaded automatically when a task runs:
 
 ```bash
 jevauto keys set TYPESAFE_API_KEY --clipboard   # copy the key first; the clipboard is cleared afterwards
@@ -55,14 +72,17 @@ jevauto keys list                               # masked
 jevauto keys import-env                         # move keys that are already env vars into the vault
 ```
 
-When looking up a key, the loader checks three places in order: this process's environment, then the vault, then Windows user environment variables saved in the registry. The registry fallback means a variable you set after opening the terminal still works.
+When looking up a key, the loader checks this process's environment first, then the vault; on Windows it also checks user environment variables saved in the registry, so a variable you set after opening the terminal still works.
+
+No vault, as on a headless server or in CI? Skip the `keys` commands and export the variables instead (`export OPENJEV_API_KEY=...`); the environment always wins.
 
 ## Drive it from Claude Code (no Anthropic API key)
 
 jevauto is also an MCP server, so Claude Code itself can plan the steps. Only `TYPESAFE_API_KEY` is needed:
 
 ```bash
-claude mcp add jevauto --scope user -- <repo>\.venv\Scripts\python.exe -m jevauto.mcp_server
+claude mcp add jevauto --scope user -- <repo>/.venv/bin/python -m jevauto.mcp_server          # Linux, macOS
+claude mcp add jevauto --scope user -- <repo>\.venv\Scripts\python.exe -m jevauto.mcp_server  # Windows
 ```
 
 In a new session, ask Claude to do a task in the browser. The tools are `open_browser`, `attach_window`, `observe`, `navigate`, `act` and `close`. Every `act` passes the same Jev checks as the API planner. Actions that need your approval come back as NEEDS CONFIRMATION, and Claude asks you in chat before calling again with `confirmed=true`.
@@ -71,8 +91,8 @@ In a new session, ask Claude to do a task in the browser. The tools are `open_br
 
 ```bash
 jevauto run "find the cheapest nonstop flight from Boston to Chicago next Friday" --url google.com/travel/flights
-jevauto run "turn on dark mode" --window "^Settings$"
-jevauto run "type a shopping list: eggs, milk" --launch notepad.exe --window "Untitled - Notepad"
+jevauto run "turn on dark mode" --window "^Settings$"                                            # Windows only
+jevauto run "type a shopping list: eggs, milk" --launch notepad.exe --window "Untitled - Notepad"  # Windows only
 ```
 
 Options:
@@ -87,13 +107,15 @@ Every Jev question, answer and policy decision is appended to `runs/<timestamp>.
 ## Tests
 
 ```bash
-.venv\Scripts\python -m pytest -q
+.venv/bin/python -m pytest -q        # Windows: .venv\Scripts\python -m pytest -q
 ```
 
-The tests run offline and need no keys. The real TypeSafe SDK talks to a mock transport. Browser tests use a local HTML fixture in headless Chromium. Desktop tests open a private WinForms window and never touch your own apps.
+The tests run offline and need no keys. The real TypeSafe SDK talks to a mock transport. Browser tests use a local HTML fixture in headless Chromium. Desktop tests open a private WinForms window and never touch your own apps; they run on Windows only and are
+skipped elsewhere. CI runs the suite on Ubuntu and Windows.
 
 ## Known limits (v1)
 
+- Desktop-app automation is Windows-only (it uses Windows UI Automation).
 - Elements inside iframes and shadow DOM aren't collected yet.
 - Jev reads text only, so canvas-drawn UIs and custom-drawn desktop apps that don't expose UI Automation are invisible to it.
 - Jev 1.13 is weak at arithmetic, dates and counting (see the TypeSafe "jaggedness" page). Keep those in the planner or in code, not in gate questions.
@@ -112,7 +134,7 @@ On a game project with ~170k tokens of docs, `find` returns 12–25k tokens of s
 
 ## Living wiki (`jevauto wiki`)
 
-Sets up `docs/wiki/` in a repo, after the IridescentCraft wiki template: conventions, style guide, seven protocols, a home page, an overview, a generated doc map and session logs.
+Sets up `docs/wiki/` in a repo: conventions, style guide, seven protocols, a home page, an overview, a generated doc map and session logs.
 
 ```bash
 jevauto wiki init <repo> --name "..." --summary "..." --check-cmd "..."

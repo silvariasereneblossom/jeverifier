@@ -2,7 +2,7 @@
 
 This is the living wiki for **{name}**. It lives in the repo (`docs/wiki/`) so docs move with the code in the same commits. The project's
 existing docs stay where they are; the wiki links into them and adds overview pages, a doc map, session logs,
-and consistency checks. Maintenance follows the protocols in `protocols/`, adapted from the IridescentCraft wiki template.
+and consistency checks. Maintenance follows the protocols in `protocols/`.
 
 ## Layout
 

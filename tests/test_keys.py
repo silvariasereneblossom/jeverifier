@@ -66,3 +66,11 @@ def test_provider_prefers_typesafe_then_openjev(monkeypatch):
     monkeypatch.setenv("JEVAUTO_JEV_PROVIDER", "openjev")
     p = jev.choose()
     assert (p.name, p.base_url, p.model) == ("openjev", "https://api.openjev.sh", "openjev")
+
+
+def test_without_a_vault_keys_come_from_the_environment(monkeypatch):
+    from keyring.backends.fail import Keyring as NoVault
+
+    keyring.set_keyring(NoVault())  # a headless Linux box with no Secret Service
+    monkeypatch.setenv("OPENJEV_API_KEY", "sk-from-env")
+    assert keys.load_into_env() == [] and jev.choose().name == "openjev"

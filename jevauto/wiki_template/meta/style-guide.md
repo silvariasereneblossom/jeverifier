@@ -1,4 +1,3 @@
-<!-- Adapted from the IridescentCraft wiki template (designdocs/wiki-template). -->
 # Style Guide
 
 This wiki's tone is modeled on [Wikipedia's Manual of Style](https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style) but adapted for a personal technical wiki that serves a different set of needs. Wikipedia is a general encyclopedia written by human editors for the public. This wiki is an operator reference and project memory — authored primarily by a Claude Code instance translating from operator conversations into encyclopedic prose.

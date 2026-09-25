@@ -2,7 +2,8 @@
 passing through the Jev fidelity gate. No Anthropic API key needed; needs a Jev key
 (TYPESAFE_API_KEY or OPENJEV_API_KEY, see jev.py).
 
-Register:  claude mcp add jevauto -- <venv>\\Scripts\\python.exe -m jevauto.mcp_server
+Register:  claude mcp add jevauto -- <venv python> -m jevauto.mcp_server
+           (<venv>/bin/python on Linux and macOS, <venv>\\Scripts\\python.exe on Windows)
 """
 
 from __future__ import annotations

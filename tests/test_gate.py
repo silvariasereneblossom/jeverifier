@@ -4,6 +4,7 @@ so request shape and answer handling are exercised without an API key or network
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import httpx2
@@ -163,6 +164,7 @@ def test_secrets_are_redacted_before_anyone_sees_them():
 
 
 @pytest.mark.desktop
+@pytest.mark.skipif(sys.platform != "win32", reason="desktop mode is Windows-only")
 def test_desktop_observer_on_private_window():
     import subprocess
     import time

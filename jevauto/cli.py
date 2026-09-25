@@ -163,7 +163,7 @@ def _run(args: argparse.Namespace) -> int:
 
 
 def _wiki_parser(sub) -> None:
-    w = sub.add_parser("wiki", help="living wiki in docs/wiki/ (IridescentCraft-style protocols)")
+    w = sub.add_parser("wiki", help="living wiki in docs/wiki/, with maintenance protocols")
     ws = w.add_subparsers(dest="wiki_cmd", required=True)
     cost = {"type": float, "default": 1.0, "help": "stop before a run would spend more than this many USD"}
     wi = ws.add_parser("init", help="scaffold docs/wiki/ and point CLAUDE.md at it")
@@ -255,8 +255,14 @@ def main(argv: list[str] | None = None) -> int:
         return {"keys": _keys, "ctx": _ctx, "wiki": _wiki}.get(args.cmd, _run)(args)
     except Exception as err:
         from .consistency import CostLimit
+        from keyring.errors import KeyringError
+
         from .publish import PublishError
 
+        if isinstance(err, KeyringError):
+            print(f"No OS credential vault is available ({err}). On Linux, install and unlock GNOME Keyring or "
+                  "KWallet, or skip the vault and export the keys as environment variables.")
+            return 2
         if not isinstance(err, (CostLimit, PublishError)):
             raise
         print(err)
