@@ -1,0 +1,9 @@
+.venv/
+runs/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+out/
+experiments/*.jsonl
+experiments/*.json
+*.lnk

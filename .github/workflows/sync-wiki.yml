@@ -1,0 +1,32 @@
+# Mirrors wiki/ to this repo's GitHub Wiki. wiki/ is written by `jevauto wiki publish` from the private repo,
+# so every page here has already passed its allowlist, internal-marker and deny checks.
+# Needs the repo secret WIKI_PUSH_TOKEN: a fine-grained PAT with Contents read/write on this repo (covers its wiki).
+name: sync-wiki
+
+on:
+  push:
+    branches: [main]
+    paths: ["wiki/**", ".github/workflows/sync-wiki.yml"]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    if: github.repository == 'silvariasereneblossom/jevauto' && !contains(github.event.head_commit.message, '[skip wiki]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          token: ${{ secrets.WIKI_PUSH_TOKEN }}
+          path: wiki-checkout
+      - name: Mirror wiki/ into the GitHub Wiki
+        run: |
+          find wiki-checkout -maxdepth 1 -name '*.md' -delete
+          cp wiki/*.md wiki-checkout/
+          cd wiki-checkout
+          git add -A
+          if git diff --cached --quiet; then echo "wiki unchanged"; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "auto-sync from main@${GITHUB_SHA::7}"
+          git push

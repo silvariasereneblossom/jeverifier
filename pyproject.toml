@@ -1,0 +1,33 @@
+[project]
+name = "jevauto"
+version = "0.1.0"
+description = "Browser and desktop automation: Claude plans, Jev (TypeSafe) gates every action, Playwright/UIA executes."
+requires-python = ">=3.10"
+dependencies = [
+  "anthropic>=1.7",
+  "typesafe-sdk>=0.7.1",
+  "playwright>=1.50",
+  "keyring>=25",
+  "mcp>=2.2",
+  "pywinauto>=0.6.9; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+jevauto = "jevauto.cli:main"
+jevauto-mcp = "jevauto.mcp_server:main"
+
+[project.gui-scripts]
+jevauto-keys = "jevauto.keys_gui:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["jevauto*"]
+
+[tool.setuptools.package-data]
+jevauto = ["wiki_pages/*.md", "wiki_template/**/*.md"]
