@@ -154,7 +154,7 @@ def _wiki_parser(sub) -> None:
 
 
 def _parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="jeverifier", description="JeVerifier: a Jev coding harness.")
+    p = argparse.ArgumentParser(prog="jeverifier", description="JeVerifier: Jev checks for maintainable code and consistent docs, plus context retrieval.")
     sub = p.add_subparsers(dest="cmd", required=True)
     ks = sub.add_parser("keys", help="manage API keys in Windows Credential Manager").add_subparsers(dest="keys_cmd", required=True)
     s = ks.add_parser("set", help="store a key (hidden prompt, or --clipboard)")

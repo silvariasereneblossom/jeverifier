@@ -1,7 +1,7 @@
 [project]
 name = "jeverifier"
 version = "0.2.0"
-description = "JeVerifier: a Jev (TypeSafe) coding harness: task reading lists, session digests, and doc and code checks."
+description = "JeVerifier: cheap Jev (TypeSafe) checks that keep code maintainable and docs consistent, plus context retrieval."
 requires-python = ">=3.10"
 dependencies = [
   "typesafe-sdk>=0.7.1",

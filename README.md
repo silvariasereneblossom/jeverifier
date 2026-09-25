@@ -1,23 +1,34 @@
 # JeVerifier
 
-A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session, so the session
-can check more for little cost and point its reading at what a task needs:
+Keeps a codebase maintainable and its docs consistent while Claude works on it. JeVerifier puts **Jev** (TypeSafe's
+fast classifier) beside a Claude coding session to run checks nobody would pay a frontier model to run on every
+change:
 
-- **Reading lists** instead of reading every doc at session start.
-- **Session digests** instead of carrying a whole conversation into the next session.
-- **Doc contradiction checks** and **code rule checks** that, after one full review, only look at what changed.
+- **Code rule checks** (`wiki lint`): every function against the project's own architectural rules, with their
+  documented exceptions.
+- **Doc consistency checks** (`wiki check`): statements that contradict each other across the docs, including a
+  milestone plan before it is implemented.
+- **Context retrieval** (`ctx find`, `ctx digest`): reading lists for a task, and session digests for handover.
 
-Jev only selects, ranks and labels; it never writes summaries or code, so it can leave something out but cannot
-invent anything. Claude reviews what Jev surfaces, and every review is recorded so it is not paid for twice.
+After one full review, every re-check looks only at what changed, and each verdict is recorded so it is not paid
+for twice. Jev only selects, ranks and labels; it never writes code or summaries, so it can miss something but
+cannot invent anything, and Claude judges everything it flags.
 
-## Token savings, measured
+## What it catches, and what it saves
 
-In the first milestone measured, reading lists did **not** reduce what agents read: agents told to read everything
-already pick out about a fifth of the docs, and all doc reading is 6–12% of the token bill. The measured value so
-far is in the checks: on that project the first reviews found 10 stale doc statements and 4 real errors in a
-milestone contract before implementation, and re-checks after that cost a few pairs per edit. Code reading is the
-larger share of the bill, and per-phase lists with code APIs (`ctx find --code`) are the version measured next.
-Numbers and method: [Token savings](https://github.com/silvariasereneblossom/jeverifier/wiki/Token-Savings).
+Measured on one game project (about 170k tokens of design docs, 1,400 GDScript functions):
+
+- **Code rules:** each rule caught 19–20 of 20 planted violations and flagged none of 40 clean functions. A full run
+  over 1,410 functions is about $0.03 at TypeSafe's list price, and a re-run costs nothing for unchanged code.
+- **Docs:** the first review found 10 stale statements; a milestone plan's review found 4 real errors before
+  implementation, one of which no reviewer would likely have found.
+- **Token savings are modest.** Jev replaces judgments and lookups, not code generation, so expect around 10% at
+  most from Jev alone. In the first milestone measured, reading lists did not reduce what agents read, and all doc
+  reading is 6–12% of the token bill.
+- **Not measured yet:** whether the checks catch logic bugs, as opposed to rule and consistency problems.
+
+Numbers and method: [Measurements](https://github.com/silvariasereneblossom/jeverifier/wiki/Measurements),
+[Token savings](https://github.com/silvariasereneblossom/jeverifier/wiki/Token-Savings).
 
 ## Setup
 
@@ -79,21 +90,6 @@ claude mcp add jeverifier --scope user -- <checkout>\.venv\Scripts\python.exe -m
 
 ## The workflow
 
-**Session start: a reading list, not the whole docs.**
-
-```bash
-jeverifier ctx find <repo> "<task>"          # doc sections the task needs, within a token budget (default 25k)
-jeverifier ctx find <repo> "<task>" --code "scripts/**/*.gd"   # ...and the code APIs it touches
-jeverifier ctx index <repo>                  # every doc section with its size
-```
-
-**Handover: a digest, not the transcript.**
-
-```bash
-jeverifier ctx digest <session|latest> --since 2026-09-20 --handover <repo>/docs/HANDOVER.md
-jeverifier wiki log <repo> latest --since <date>     # the digest as a dated session log in the repo's wiki
-```
-
 **Docs stay consistent.** One full review, then only what changed:
 
 ```bash
@@ -108,6 +104,21 @@ exceptions; unchanged functions are answered from the cache:
 
 ```bash
 jeverifier wiki lint <repo>
+```
+
+**Context: a reading list for the task.**
+
+```bash
+jeverifier ctx find <repo> "<task>"          # doc sections the task needs, within a token budget (default 25k)
+jeverifier ctx find <repo> "<task>" --code "scripts/**/*.gd"   # ...and the code APIs it touches
+jeverifier ctx index <repo>                  # every doc section with its size
+```
+
+**Handover: a digest, not the transcript.**
+
+```bash
+jeverifier ctx digest <session|latest> --since 2026-09-20 --handover <repo>/docs/HANDOVER.md
+jeverifier wiki log <repo> latest --since <date>     # the digest as a dated session log in the repo's wiki
 ```
 
 **The wiki itself:** `jeverifier wiki init <repo>` sets up `docs/wiki/` (conventions, style guide, seven maintenance

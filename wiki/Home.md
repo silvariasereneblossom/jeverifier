@@ -1,6 +1,6 @@
 # JeVerifier
 
-A Jev (TypeSafe) coding harness: task reading lists, session digests, and doc and code checks that, after one full review, only look at what changed.
+Keeps a codebase maintainable and its docs consistent: cheap Jev checks of code rules and doc consistency on every change, plus reading lists and session digests, with modest token savings.
 
 ## Start here
 
@@ -11,7 +11,7 @@ A Jev (TypeSafe) coding harness: task reading lists, session digests, and doc an
 
 ## Project docs
 
-- [README.md](https://github.com/silvariasereneblossom/jeverifier/blob/main/README.md) · ≈1,636 tokens · A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session, so the session can check more for little cost
+- [README.md](https://github.com/silvariasereneblossom/jeverifier/blob/main/README.md) · ≈1,888 tokens · Keeps a codebase maintainable and its docs consistent while Claude works on it.
 
 ## Keeping the wiki alive
 
