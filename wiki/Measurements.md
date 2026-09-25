@@ -8,7 +8,7 @@ what the harness can do, not a guarantee for every codebase.
 
 | Part | Measured | Blind spots |
 |---|---|---|
-| `ctx find` | Reading lists of 12–25k tokens against ~168k for all docs. In the first real milestone, the orchestrator opened ~9.5k tokens beyond its 25k list | Without `--code` it ranks prose only, so it never sees function signatures (29 of 54 misses were code). It can also skip one sibling of a group it otherwise includes |
+| `ctx find` | Reading lists of 12–25k tokens. In the first real milestone, agents with lists read ~41k tokens of docs each, against ~37.5k for agents told to read everything (they choose for themselves); the orchestrator opened ~9.5k beyond its 25k list | Without `--code` it ranks prose only, so it never sees function signatures (29 of 54 misses were code). It can also skip one sibling of a group it otherwise includes |
 | `ctx digest` | A 42-turn session (~55k tokens of conversation) → ~5.6k tokens; the key decisions and preferences were all kept | Can omit a turn; cannot invent one |
 | `wiki check` | Planted contradictions found: changed numbers 6/10 in the full lists and 8/10 in delta mode; flipped rule words 4/5. The first real review found 10 stale statements in 175 pairs | Contradictions inside one section, and statements without a number or rule word |
 | `wiki lint` | Three rules, each scored on 20 planted violations and 40 clean functions: 20/20, 20/20 and 19/20 caught, 0/40 flagged. The first real run flagged 13 functions; after one round of rewording and one verdict, 0 | Rules that need taste rather than facts (*comments explain why*: 40%) |
@@ -19,7 +19,7 @@ that were read and judged valid.
 
 ## Token savings
 
-See [Projected token savings](Token-Savings): the measured savings, a formula for your own repo, and worked examples.
+See [Token savings](Token-Savings): what the first milestone measured, and how to measure it on your project.
 
 Jev's own cost is small: the full first lint of 1,410 functions was about 0.5M Jev tokens (≈$0.03 at
 TypeSafe's list price), and a full contradiction run about $1.
@@ -34,4 +34,4 @@ TypeSafe's list price), and a full contradiction run about $1.
 
 - [Overview](Overview)
 - [How it works](How-It-Works)
-- [Projected token savings](Token-Savings)
+- [Token savings](Token-Savings)

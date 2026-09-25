@@ -7,11 +7,11 @@ A Jev (TypeSafe) coding harness: task reading lists, session digests, and doc an
 - [Overview](Overview) — the project in one page
 - [How it works](How-It-Works) — the coding harness: reading lists, digests, doc and code checks
 - [Measurements](Measurements) — what it catches and what it misses
-- [Projected token savings](Token-Savings) — what it saves, and how to project it for your repo
+- [Token savings](Token-Savings) — what has been measured, and how to measure it on your project
 
 ## Project docs
 
-- [README.md](https://github.com/silvariasereneblossom/jeverifier/blob/main/README.md) · ≈1,577 tokens · A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session so the session reads less and checks more: - *
+- [README.md](https://github.com/silvariasereneblossom/jeverifier/blob/main/README.md) · ≈1,636 tokens · A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session, so the session can check more for little cost
 
 ## Keeping the wiki alive
 

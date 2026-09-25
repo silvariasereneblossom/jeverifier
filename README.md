@@ -1,7 +1,7 @@
 # JeVerifier
 
-A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session so the session reads
-less and checks more:
+A coding harness that puts **Jev** (TypeSafe's fast classifier) under a Claude coding session, so the session
+can check more for little cost and point its reading at what a task needs:
 
 - **Reading lists** instead of reading every doc at session start.
 - **Session digests** instead of carrying a whole conversation into the next session.
@@ -10,18 +10,14 @@ less and checks more:
 Jev only selects, ranks and labels; it never writes summaries or code, so it can leave something out but cannot
 invent anything. Claude reviews what Jev surfaces, and every review is recorded so it is not paid for twice.
 
-## Projected token savings
+## Token savings, measured
 
-JeVerifier cuts what a Claude session re-reads, not what it writes. Measured on one game project with about 170k
-tokens of design docs:
-
-- **Session start:** ~170k tokens of docs → a 15–25k reading list (~85–90% less).
-- **Handover:** a ~55k-token conversation → a ~5.6k digest (~90% less).
-- **Doc and code audits:** after the first full review, each re-check lists only what changed (~99% less).
-
-Projected per session (one start plus one handover): about 65% less reading for a repo with 20k tokens of docs,
-77% at 80k and 86% at 170k. The formula, worked examples and caveats are on the
-[Projected token savings](https://github.com/silvariasereneblossom/jeverifier/wiki/Token-Savings) wiki page.
+In the first milestone measured, reading lists did **not** reduce what agents read: agents told to read everything
+already pick out about a fifth of the docs, and all doc reading is 6–12% of the token bill. The measured value so
+far is in the checks: on that project the first reviews found 10 stale doc statements and 4 real errors in a
+milestone contract before implementation, and re-checks after that cost a few pairs per edit. Code reading is the
+larger share of the bill, and per-phase lists with code APIs (`ctx find --code`) are the version measured next.
+Numbers and method: [Token savings](https://github.com/silvariasereneblossom/jeverifier/wiki/Token-Savings).
 
 ## Setup
 

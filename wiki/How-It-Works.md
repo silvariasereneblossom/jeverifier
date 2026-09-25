@@ -7,10 +7,11 @@ Paid runs stop before they would pass `--max-cost` (default $1).
 
 ## Loading context: `ctx find`
 
-A fresh session in a docs-heavy repo would read every design doc. `ctx find <repo> "<task>"` splits the
+`ctx find <repo> "<task>"` points a session or agent at the docs a task needs. It splits the
 Markdown docs into sections, asks Jev which sections the task needs, and returns a reading list inside a
 token budget (default 25k). The files a session always loads (`CLAUDE.md`, a handover) are listed but not
-scored. The list is a starting point: Claude still opens anything the task turns out to need.
+scored. The list is a starting point: Claude still opens anything the task turns out to need. Measured so
+far, lists did not reduce how much agents read (see [Token savings](Token-Savings)).
 
 Docs alone miss code: in the first real milestone, 29 of 54 reading-list misses were code (APIs the task
 pinned, and test files read to copy a house pattern). `--code 'scripts/**/*.gd' 'tests/**/*.gd'` adds each

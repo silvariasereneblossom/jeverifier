@@ -20,11 +20,11 @@ failure mode is leaving something out, which every part below measures.
 | API keys without env vars | `jeverifier keys gui` | [keys.py](https://github.com/silvariasereneblossom/jeverifier/blob/main/jeverifier/keys.py) |
 
 How the parts work: [How it works](How-It-Works). What they catch:
-[Measurements](Measurements). What they save: [Projected token savings](Token-Savings).
+[Measurements](Measurements). What they save: [Token savings](Token-Savings).
 
 ## Related pages
 
 - [Home](Home)
 - [How it works](How-It-Works)
 - [Measurements](Measurements)
-- [Projected token savings](Token-Savings)
+- [Token savings](Token-Savings)
